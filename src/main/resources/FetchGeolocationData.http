@@ -1,0 +1,5 @@
+GET http://localhost:8080/iotdemo_war_exploded/geolocation
+Accept: */*
+Cache-Control: no-cache
+
+###

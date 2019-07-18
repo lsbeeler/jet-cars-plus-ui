@@ -1,26 +1,29 @@
 package org.hazelcast.iotdemo;
 
 
+import com.google.gson.Gson;
 import com.hazelcast.core.IMap;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
-public class MapDumper
+public final class MapDumper<K, V>
 {
     private static ExecutorService RUNNER =
             Executors.newFixedThreadPool(32);
+    private static final Gson GSON = new Gson( );
 
     private static class DumperTask implements Runnable
     {
-        private static final Logger LOGGER = Logger.getLogger("DumperTask");
+        private static final Logger LOG = Logger.getLogger("DumperTask");
 
-        private final IMap<Integer, Long> map;
+        private final IMap<Integer, GeolocationCoordinates> map;
 
-        public DumperTask(final IMap<Integer, Long> map)
+        public DumperTask(final IMap<Integer, GeolocationCoordinates> map)
         {
             this.map = map;
         }
@@ -28,15 +31,21 @@ public class MapDumper
         @Override
         public void run( )
         {
-            LOGGER.info("DumperTask: thread started...");
+            LOG.info("DumperTask: thread started...");
 
             while (true) {
                 Set<Integer> driverIds = map.keySet( );
-                for (Integer driverId : driverIds)
-                    LOGGER.info(
-                            "Entry: (key = " + driverId + ", value" +
-                                    " = " + map.get(driverId) + ")" +
-                                    ".");
+                ArrayList<GeolocationJSONPeer> peers = new ArrayList<>( );
+
+                for (int driverId : driverIds) {
+                    GeolocationJSONPeer peer = new GeolocationJSONPeer(driverId,
+                            map.get(driverId));
+                    peers.add(peer);
+                }
+
+                String json = GSON.toJson(peers);
+                LOG.info(json);
+
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
@@ -46,8 +55,9 @@ public class MapDumper
         }
     }
 
-    public static void start(final IMap<Integer, Long> violationsMap)
+    public static void start(
+            final IMap<Integer, GeolocationCoordinates> coordsMap)
     {
-        RUNNER.submit(new DumperTask(violationsMap));
+        RUNNER.submit(new DumperTask(coordsMap));
     }
 }

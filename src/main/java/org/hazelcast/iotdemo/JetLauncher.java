@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public final class JetLauncher implements Serializable
 {
     private static final Logger LOG = Logger.getLogger("JetLauncher");
-    private static final String COORDINATES_MAP = "coords-map";
 
     public static final long serialVersionUID = 1L;
 
@@ -77,13 +76,10 @@ public final class JetLauncher implements Serializable
         geolocationFork
                 .map(pt -> new GeolocationEntry(pt.getDriverId( ),
                         new GeolocationCoordinates(pt)))
-                .drainTo(Sinks.map(COORDINATES_MAP));
-
-        //preforkStage.drainTo(Sinks.logger( ));
+                .drainTo(Sinks.map(AppConfiguration.COORDINATES_MAP));
 
         JetInstance jet = Jet.newJetInstance( );
-
-        //MapDumper.start(jet.getHazelcastInstance().getMap(COORDINATES_MAP));
+        AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
 
         try {
             jet.newJob(p, configureJob( )).join( );

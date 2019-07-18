@@ -22,6 +22,16 @@ public final class GeolocationCoordinates implements Serializable
         this(wrapper.getDataPoint( ));
     }
 
+    public double getLatitude( )
+    {
+        return latitude;
+    }
+
+    public double getLongitude( )
+    {
+        return longitude;
+    }
+
     @Override
     public String toString( )
     {
