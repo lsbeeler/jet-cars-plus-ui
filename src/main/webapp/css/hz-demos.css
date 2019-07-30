@@ -1,3 +1,8 @@
 .hz-vspace {
     height: 18px;
 }
+
+#map {
+    width: 800px;
+    height: 600px;
+}

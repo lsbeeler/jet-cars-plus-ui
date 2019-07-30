@@ -5,18 +5,26 @@
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/hz-demos.css">
+
     <script src="scripts/bootstrap.bundle.min.js"></script>
     <script src="scripts/iotdemo-client-logic.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=XXX&callback=initMap"
+            async defer></script>
 
     <title>Hazelcast Jet IoT Demo</title>
 </head>
     <body>
-        <div class="hz-vspace">
+        <div class="hz-vspace"></div>
 
-        </div>
         <div class="container">
             <button type="button" class="btn btn-primary"
                     onclick="requestStart( );">Start</button>
+            <button type="button" class="btn btn-primary"
+                    onclick="refreshMap( );">Refresh Map</button>
         </div>
+
+        <br>
+
+        <div id="map"></div>
     </body>
 </html>

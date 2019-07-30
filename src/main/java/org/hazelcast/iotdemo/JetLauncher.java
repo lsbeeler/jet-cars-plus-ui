@@ -42,7 +42,7 @@ public final class JetLauncher implements Serializable
 
         try {
             amcpDataSource = AMCPDataSource.createSource(inputCSVPath, true,
-                    100);
+                    1);
         } catch (IOException e) {
             LOG.severe("JetLauncher: createSource( ): unable to read AMCP " +
                     "input data CSV file at " + inputCSVPath + ": " +
@@ -80,6 +80,9 @@ public final class JetLauncher implements Serializable
 
         JetInstance jet = Jet.newJetInstance( );
         AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
+
+        MapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
+                AppConfiguration.COORDINATES_MAP));
 
         try {
             jet.newJob(p, configureJob( )).join( );
