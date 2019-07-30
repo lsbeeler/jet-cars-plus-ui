@@ -15,7 +15,7 @@ function initMap( )
 {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 38.9296165, lng: -77.2478723},
-        zoom: 10
+        zoom: 14
     });
 }
 
@@ -26,9 +26,16 @@ function refreshMap( )
     var geolocationEndpointUrl = "http://localhost:8080/iotdemo_war_exploded/geolocation";
 
     var xhr = new XMLHttpRequest( );
-    xhr.open("GET", geolocationEndpointUrl, false);
+    xhr.open("GET", geolocationEndpointUrl);
+    xhr.onreadystatechange = function (ev) {
+        if (xhr.readyState == 4 && xhr.status == 200)
+            ParseGeolocationResponse(xhr);
+    };
     xhr.send(null);
+}
 
+function ParseGeolocationResponse(xhr)
+{
     var responseObject = JSON.parse(xhr.responseText);
 
     for (var i = 0; i < responseObject.length; i++) {
@@ -41,15 +48,19 @@ function refreshMap( )
 
 
         if (markers[driverId]) {
-            markers[driverId].setMap(null);
-            markers[driverId] = null
+            markers[driverId].setPosition(gPos);
+        } else {
+            markers[driverId] = new google.maps.Marker({
+                position: gPos,
+                title: name,
+                icon: "http://maps.google.com/mapfiles/kml/shapes/cabs.png"
+            });
         }
-
-        markers[driverId] = new google.maps.Marker({
-            position: gPos,
-            title: name
-        });
 
         markers[driverId].setMap(map);
     }
 }
+
+var MAP_REFRESH_INTERVAL_MSEC = 67;
+
+setInterval(refreshMap, MAP_REFRESH_INTERVAL_MSEC);
