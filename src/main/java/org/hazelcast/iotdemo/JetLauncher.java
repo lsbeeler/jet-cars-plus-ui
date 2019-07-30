@@ -3,6 +3,7 @@ package org.hazelcast.iotdemo;
 
 import com.hazelcast.jet.Jet;
 import com.hazelcast.jet.JetInstance;
+import com.hazelcast.jet.aggregate.AggregateOperations;
 import com.hazelcast.jet.config.JobConfig;
 import com.hazelcast.jet.pipeline.*;
 
@@ -78,11 +79,22 @@ public final class JetLauncher implements Serializable
                         new GeolocationCoordinates(pt)))
                 .drainTo(Sinks.map(AppConfiguration.COORDINATES_MAP));
 
+        // Handle the policy violation detection fork
+        violationDetectionFork
+                .map(DataPointPolicyWrapper::new)
+                .filter(DataPointPolicyWrapper::isPolicyViolation)
+                .groupingKey(wrapper -> wrapper.getDataPoint( ).getDriverId( ))
+                .rollingAggregate(AggregateOperations.counting( ))
+                .drainTo(Sinks.map(AppConfiguration.VIOLATIONS_MAP));
+
         JetInstance jet = Jet.newJetInstance( );
         AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
 
-        MapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
-                AppConfiguration.COORDINATES_MAP));
+//        GeolocationMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
+//                AppConfiguration.COORDINATES_MAP));
+
+        ViolationsMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
+                AppConfiguration.VIOLATIONS_MAP));
 
         try {
             jet.newJob(p, configureJob( )).join( );

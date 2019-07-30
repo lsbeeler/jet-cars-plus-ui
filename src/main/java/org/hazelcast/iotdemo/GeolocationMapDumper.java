@@ -11,10 +11,10 @@ import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 
-public final class MapDumper<K, V>
+public final class GeolocationMapDumper<K, V>
 {
     private static ExecutorService RUNNER =
-            Executors.newFixedThreadPool(32);
+            Executors.newFixedThreadPool(1);
     private static final Gson GSON = new Gson( );
 
     private static class DumperTask implements Runnable

@@ -3,7 +3,7 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>Archetype Created Web Application</display-name>
+    <display-name>Hazelcast Jet IoT Demo</display-name>
 
     <servlet>
         <servlet-name>StartServlet</servlet-name>
@@ -13,6 +13,11 @@
     <servlet>
         <servlet-name>GeolocationServlet</servlet-name>
         <servlet-class>org.hazelcast.iotdemo.GeolocationServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PolicyServlet</servlet-name>
+        <servlet-class>org.hazelcast.iotdemo.PolicyServlet</servlet-class>
     </servlet>
 
 
@@ -25,5 +30,10 @@
     <servlet-mapping>
         <servlet-name>GeolocationServlet</servlet-name>
         <url-pattern>/geolocation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PolicyServlet</servlet-name>
+        <url-pattern>/policy</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/tabulator.min.css">
     <link rel="stylesheet" href="css/hz-demos.css">
 
     <script src="scripts/bootstrap.bundle.min.js"></script>
-    <script src="scripts/iotdemo-client-logic.js"></script>
+    <script src="scripts/tabulator.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=XXX&callback=initMap"
             async defer></script>
 
@@ -21,10 +22,19 @@
                     onclick="requestStart( );">Start</button>
             <button type="button" class="btn btn-primary"
                     onclick="refreshMap( );">Refresh Map</button>
+            <button type="button" class="btn btn-primary"
+                    onclick="RefreshViolationsTable( );">Refresh Violations Table</button>
         </div>
 
         <br>
 
         <div id="map"></div>
+
+        <br>
+
+        <div id="violations_table"></div>
     </body>
+
+<script src="scripts/iotdemo-client-logic.js"></script>
+
 </html>

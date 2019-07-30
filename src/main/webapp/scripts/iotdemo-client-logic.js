@@ -61,6 +61,27 @@ function ParseGeolocationResponse(xhr)
     }
 }
 
+var ViolationsTable = new Tabulator("#violations_table", {
+    height: 400,
+    columns: [
+        {title: "Driver ID", field: "driverId"},
+        {title: "Violation Count", field: "violationCount"}
+    ]
+     });
+
+function RefreshViolationsTable( )
+{
+
+    var policyEndpointUrl = "http://localhost:8080/iotdemo_war_exploded/policy";
+    var xhr = new XMLHttpRequest( );
+    xhr.open("GET", policyEndpointUrl, false);
+    xhr.send(null);
+    var responseObject = JSON.parse(xhr.responseText);
+
+
+    ViolationsTable.setData(responseObject);
+}
+
 var MAP_REFRESH_INTERVAL_MSEC = 67;
 
 setInterval(refreshMap, MAP_REFRESH_INTERVAL_MSEC);
