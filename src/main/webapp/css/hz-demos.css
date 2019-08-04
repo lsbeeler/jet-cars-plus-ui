@@ -8,3 +8,10 @@
     margin-right: auto;
     margin-left: auto;
 }
+
+#violations-table-container {
+    width: 800px;
+    height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}

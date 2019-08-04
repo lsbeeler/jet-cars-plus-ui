@@ -74,14 +74,18 @@ function RefreshViolationsTable( )
 
     var policyEndpointUrl = "http://localhost:8080/iotdemo_war_exploded/policy";
     var xhr = new XMLHttpRequest( );
-    xhr.open("GET", policyEndpointUrl, false);
+    xhr.open("GET", policyEndpointUrl);
+    xhr.onreadystatechange = function (ev) {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var responseObject = JSON.parse(xhr.responseText);
+            ViolationsTable.setData(responseObject);
+        }
+    };
     xhr.send(null);
-    var responseObject = JSON.parse(xhr.responseText);
-
-
-    ViolationsTable.setData(responseObject);
 }
 
 var MAP_REFRESH_INTERVAL_MSEC = 67;
+var VIOLATIONS_TABLE_REFRESH_INTEVAL_MSEC = 100;
 
 setInterval(refreshMap, MAP_REFRESH_INTERVAL_MSEC);
+setInterval(RefreshViolationsTable, VIOLATIONS_TABLE_REFRESH_INTEVAL_MSEC);

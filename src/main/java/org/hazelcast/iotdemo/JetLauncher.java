@@ -43,7 +43,7 @@ public final class JetLauncher implements Serializable
 
         try {
             amcpDataSource = AMCPDataSource.createSource(inputCSVPath, true,
-                    1);
+                    AppConfiguration.SAMPLE_TICK_INTERVAL_MSEC);
         } catch (IOException e) {
             LOG.severe("JetLauncher: createSource( ): unable to read AMCP " +
                     "input data CSV file at " + inputCSVPath + ": " +
@@ -93,8 +93,8 @@ public final class JetLauncher implements Serializable
 //        GeolocationMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
 //                AppConfiguration.COORDINATES_MAP));
 
-        ViolationsMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
-                AppConfiguration.VIOLATIONS_MAP));
+//        ViolationsMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
+//                AppConfiguration.VIOLATIONS_MAP));
 
         try {
             jet.newJob(p, configureJob( )).join( );
