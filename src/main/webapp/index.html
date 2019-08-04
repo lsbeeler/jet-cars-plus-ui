@@ -9,6 +9,7 @@
 
     <script src="scripts/bootstrap.bundle.min.js"></script>
     <script src="scripts/tabulator.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=XXX&callback=initMap"
             async defer></script>
 
@@ -24,6 +25,8 @@
                     onclick="refreshMap( );">Refresh Map</button>
             <button type="button" class="btn btn-primary"
                     onclick="RefreshViolationsTable( );">Refresh Violations Table</button>
+            <button type="button" class="btn btn-primary"
+                    onclick="RefreshAverageSpeedChart( );">Refresh Average Speeds</button>
         </div>
 
         <br>
@@ -31,6 +34,11 @@
         <div id="map"></div>
 
         <br>
+
+        <div id="speed-chart"></div>
+
+        <br>
+
         <div id="violations-table-container" class="container">
             <div id="violations_table"></div>
         </div>

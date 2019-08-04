@@ -20,7 +20,10 @@
         <servlet-class>org.hazelcast.iotdemo.PolicyServlet</servlet-class>
     </servlet>
 
-
+    <servlet>
+        <servlet-name>AverageSpeedServlet</servlet-name>
+        <servlet-class>org.hazelcast.iotdemo.AverageSpeedServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>StartServlet</servlet-name>
@@ -35,5 +38,10 @@
     <servlet-mapping>
         <servlet-name>PolicyServlet</servlet-name>
         <url-pattern>/policy</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AverageSpeedServlet</servlet-name>
+        <url-pattern>/speed</url-pattern>
     </servlet-mapping>
 </web-app>

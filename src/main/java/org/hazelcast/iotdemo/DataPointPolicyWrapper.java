@@ -3,8 +3,6 @@ package org.hazelcast.iotdemo;
 
 public class DataPointPolicyWrapper
 {
-    private static final double POLICY_VIOLATION_THRESHOLD_MPH = 45.0;
-
     private final DataPoint dataPoint;
     private final boolean policyViolation;
 
@@ -12,7 +10,7 @@ public class DataPointPolicyWrapper
     {
         this.dataPoint = dataPoint;
         this.policyViolation = dataPoint.getSpeed( ) >
-                POLICY_VIOLATION_THRESHOLD_MPH;
+                AppConfiguration.POLICY_VIOLATION_THRESHOLD_MPH;
     }
 
     public DataPoint getDataPoint( )

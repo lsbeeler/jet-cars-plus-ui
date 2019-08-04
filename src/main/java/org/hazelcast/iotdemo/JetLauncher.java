@@ -72,12 +72,15 @@ public final class JetLauncher implements Serializable
         // on the map widget in the web dashboard
         StreamStage<DataPoint> violationDetectionFork = preforkStage;
         StreamStage<DataPoint> geolocationFork = preforkStage;
+        StreamStage<DataPoint> avergageSpeedFork = preforkStage;
+
 
         // Handle the geolocation fork
         geolocationFork
                 .map(pt -> new GeolocationEntry(pt.getDriverId( ),
                         new GeolocationCoordinates(pt)))
                 .drainTo(Sinks.map(AppConfiguration.COORDINATES_MAP));
+//                .drainTo(Sinks.logger( ));
 
         // Handle the policy violation detection fork
         violationDetectionFork
@@ -87,6 +90,15 @@ public final class JetLauncher implements Serializable
                 .rollingAggregate(AggregateOperations.counting( ))
                 .drainTo(Sinks.map(AppConfiguration.VIOLATIONS_MAP));
 
+        // Handle the average speed fork
+        avergageSpeedFork
+                .groupingKey(DataPoint::getDriverId)
+                .window(WindowDefinition.sliding(30000, 3000))
+                .aggregate(AggregateOperations.averagingDouble(
+                        DataPoint::getSpeed))
+                .drainTo(Sinks.map(AppConfiguration.AVERAGE_SPEED_MAP));
+
+
         JetInstance jet = Jet.newJetInstance( );
         AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
 
@@ -95,6 +107,9 @@ public final class JetLauncher implements Serializable
 
 //        ViolationsMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
 //                AppConfiguration.VIOLATIONS_MAP));
+
+//        AverageSpeedMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
+//                AppConfiguration.AVERAGE_SPEED_MAP));
 
         try {
             jet.newJob(p, configureJob( )).join( );
