@@ -7,37 +7,57 @@
     <link rel="stylesheet" href="css/tabulator.min.css">
     <link rel="stylesheet" href="css/hz-demos.css">
 
+    <script src="scripts/jquery-3.4.1-min.js"></script>
     <script src="scripts/bootstrap.bundle.min.js"></script>
     <script src="scripts/tabulator.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=XXX&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=XXX&callback=InitMap"
             async defer></script>
 
     <title>Hazelcast Jet IoT Demo</title>
 </head>
     <body>
-        <div class="hz-vspace"></div>
-
-        <div class="container">
-            <button type="button" class="btn btn-primary"
-                    onclick="requestStart( );">Start</button>
-            <button type="button" class="btn btn-primary"
-                    onclick="refreshMap( );">Refresh Map</button>
-            <button type="button" class="btn btn-primary"
-                    onclick="RefreshViolationsTable( );">Refresh Violations Table</button>
-            <button type="button" class="btn btn-primary"
-                    onclick="RefreshAverageSpeedChart( );">Refresh Average Speeds</button>
-        </div>
+        <nav id="app-header" class="navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <button id="start-button" type="button" class="btn btn-primary"
+                                onclick="RequestStart( );">Start</button>
+                    </div>
+                    <div class="col-sm"><p id="data-link"><a target="_blank" href="https://catalog.data.gov/dataset/advanced-messaging-concept-development-probe-vehicle-data">
+                        US Department of Transportation AMCP Data Set</a></p></div>
+                    <div class="col-sm">
+                        <p id="logo"><a href="http://www.hazelcast.com" target="_blank">
+                            <img src="images/HazelcastLogo_Dark_200w.png"></a></p>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
         <br>
+
+        <h2 class="section-head">Vehicle Geolocation</h2>
+        <p class="desc-text">Plots vehicle positions using a standard Google Maps widget. Hover over a vehicle
+            to determine the driver ID.</p>
 
         <div id="map"></div>
 
         <br>
 
+        <h2 class="section-head">Vehicle Average Speed</h2>
+        <p class="desc-text">Shows a moving average speed for each vehicle. The average is computed over a sliding
+            30-second window and updated every three seconds. All times are in application time, which is not
+            guaranteed to be the same as wall-clock time. This widget will not appear until a data feed is
+            available.</p>
+
         <div id="speed-chart"></div>
 
         <br>
+
+        <h2 class="section-head">Policy Violations Table</h2>
+        <p class="desc-text">Counts the number of business rules violations committed by each driver.
+            According to our application logic, a rules violation is a sample point where a vehicle's speed
+            exceeds 40mph. This table will populate as violations are encountered.</p>
 
         <div id="violations-table-container" class="container">
             <div id="violations_table"></div>
@@ -45,5 +65,4 @@
     </body>
 
 <script src="scripts/iotdemo-client-logic.js"></script>
-
 </html>

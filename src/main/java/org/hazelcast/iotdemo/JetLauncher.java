@@ -64,15 +64,20 @@ public final class JetLauncher implements Serializable
                 .withNativeTimestamps(5000)
                 .filter(DataPoint::isValid);
 
-        // We fork the stream into two forks, the violation detection fork,
-        // which detects speed violations and stores the number of violations
-        // per vehicle in an IMap, and the geolocation fork, which passes
-        // all valid data points through whether they represent speed
-        // violations or not such that all vehicle movements are reflected
-        // on the map widget in the web dashboard
+        // We fork the initial stream into three forks, the violation detection
+        // fork, the geolocation fork, and the average speed fork. The
+        // violations detection fork detects speed violations and stores the
+        // number of violations per vehicle in an IMap. The geolocation fork
+        // extracts the latitudes and longitude coordinates of each vehicle
+        // from the underlying DataPoint and places them in a map where a
+        // RESTful servlet can feed them to the client UI. The average speed
+        // fork computes a rolling average of vehicle speed over a 30-second
+        // window and places this information in a map where a servlet makes
+        // it available to the client UI to draw a side-scrolling, time-
+        // series widget.
         StreamStage<DataPoint> violationDetectionFork = preforkStage;
         StreamStage<DataPoint> geolocationFork = preforkStage;
-        StreamStage<DataPoint> avergageSpeedFork = preforkStage;
+        StreamStage<DataPoint> averageSpeedFork = preforkStage;
 
 
         // Handle the geolocation fork
@@ -80,7 +85,6 @@ public final class JetLauncher implements Serializable
                 .map(pt -> new GeolocationEntry(pt.getDriverId( ),
                         new GeolocationCoordinates(pt)))
                 .drainTo(Sinks.map(AppConfiguration.COORDINATES_MAP));
-//                .drainTo(Sinks.logger( ));
 
         // Handle the policy violation detection fork
         violationDetectionFork
@@ -91,7 +95,7 @@ public final class JetLauncher implements Serializable
                 .drainTo(Sinks.map(AppConfiguration.VIOLATIONS_MAP));
 
         // Handle the average speed fork
-        avergageSpeedFork
+        averageSpeedFork
                 .groupingKey(DataPoint::getDriverId)
                 .window(WindowDefinition.sliding(30000, 3000))
                 .aggregate(AggregateOperations.averagingDouble(
@@ -101,15 +105,6 @@ public final class JetLauncher implements Serializable
 
         JetInstance jet = Jet.newJetInstance( );
         AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
-
-//        GeolocationMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
-//                AppConfiguration.COORDINATES_MAP));
-
-//        ViolationsMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
-//                AppConfiguration.VIOLATIONS_MAP));
-
-//        AverageSpeedMapDumper.start(AppConfiguration.HAZELCAST_INSTANCE.getMap(
-//                AppConfiguration.AVERAGE_SPEED_MAP));
 
         try {
             jet.newJob(p, configureJob( )).join( );

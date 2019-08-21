@@ -12,6 +12,14 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 
+/**
+ * A RESTful HTTP servlet that accepts HTTP POST messages to its endpoint and,
+ * upon receipt of such a message, starts running the Jet pipeline. This
+ * servlet's endpoint should be hit by the "Start" button in the frontend web
+ * UI. Note that this endpoint only accepts one payload in its POST request
+ * body: it must be a JSON object that specifies an actionId of "START", i.e.,
+ * the entirety of the POST message body should be "{ "actionId": "START" }".
+ */
 public class StartServlet extends HttpServlet
 {
     private static final Logger LOG = Logger.getLogger("StartServlet");
@@ -44,11 +52,16 @@ public class StartServlet extends HttpServlet
     {
         Action postedAction = GSON.fromJson(req.getReader( ), Action.class);
 
-        if (postedAction != null &&
-                postedAction.getActionId( ).equalsIgnoreCase("START")) {
+        if (postedAction.equals(Action.START)) {
+            resp.setStatus(200);
+
             String inputCSVPath = this.getServletContext( ).getRealPath(
                     "WEB-INF/resources/AMCP-Probe-Data.csv");
             JetLauncher.launch(inputCSVPath);
+        } else {
+            resp.setStatus(400);
+            resp.getWriter( ).println("Unrecognized request: " +
+                    stringifyRequestBody(req));
         }
     }
 
