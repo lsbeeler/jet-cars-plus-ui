@@ -63,8 +63,13 @@ var gMarkers = [ ];
 var gViolationsTable = new Tabulator("#violations_table", {
     height: 400,
     columns: [
-        {title: "Driver ID", field: "driverId"},
-        {title: "Violation Count", field: "violationCount"}
+        {title: "Driver", field: "driverId"},
+        {title: "Violation Count", field: "violationCount"},
+        {title: "Age", field: "driverAge"},
+        {title: "Gender", field: "driverGender"},
+        {title: "Make", field: "vehicleMake"},
+        {title: "Model", field: "vehicleModel"},
+        {title: "Year", field: "vehicleYear"}
     ]
 });
 

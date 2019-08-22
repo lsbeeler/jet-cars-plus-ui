@@ -102,14 +102,10 @@ public final class JetLauncher implements Serializable
                         DataPoint::getSpeed))
                 .drainTo(Sinks.map(AppConfiguration.AVERAGE_SPEED_MAP));
 
-
-        JetInstance jet = Jet.newJetInstance( );
-        AppConfiguration.HAZELCAST_INSTANCE = jet.getHazelcastInstance( );
-
         try {
-            jet.newJob(p, configureJob( )).join( );
+            AppConfiguration.JET_INSTANCE.newJob(p, configureJob( )).join( );
         } finally {
-            jet.shutdown( );
+            AppConfiguration.JET_INSTANCE.shutdown( );
         }
     }
 }
