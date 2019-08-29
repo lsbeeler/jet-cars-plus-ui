@@ -1,0 +1,5 @@
+**/.DS_Store
+httpRequests/
+target/
+runtime/base/logs/
+runtime/base/work/

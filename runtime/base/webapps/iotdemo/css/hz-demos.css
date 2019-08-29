@@ -1,0 +1,52 @@
+#map {
+    width: 800px;
+    height: 600px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#violations-table-container {
+    width: 800px;
+    height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#speed-chart {
+    width: 800px;
+    height: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#app-header {
+    padding-top: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid black;
+    box-shadow: 0 2px 4px darkgray;
+}
+
+#data-link {
+    margin-top: 12px;
+    font-size: smaller;
+}
+
+#logo {
+    text-align: right;
+}
+
+.section-head {
+    color: steelblue;
+    border-bottom: 1px solid black;
+    margin-top: 48px;
+    width: 964px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.desc-text {
+    width: 964px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 24px;
+}
